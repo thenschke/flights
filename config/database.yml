@@ -51,4 +51,5 @@ production:
   <<: *default
   database: flights
   username: flights
+  url: flights.cl679rv81ej0.eu-central-1.rds.amazonaws.com
   password: <%= ENV['FLIGHTS_DATABASE_PASSWORD'] %>
