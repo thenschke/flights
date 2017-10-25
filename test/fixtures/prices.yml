@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  scraper_id: 1
+  offer_id: 1
+  price: 1
+  available_seats: 1
+  active: 1
+
+two:
+  scraper_id: 1
+  offer_id: 1
+  price: 1
+  available_seats: 1
+  active: 1

@@ -1,0 +1,37 @@
+<h1>Flights Poznan - Dubai </h1>
+
+<div class="example-table" id="example-table">
+
+</div>
+
+
+<script>
+var lineFormatter = function(cell, formatterParams){
+    setTimeout(function(){ //give cell enough time to be added to the DOM before calling sparkline formatter
+        cell.getElement().sparkline(cell.getValue(), {width:"100%", type:"line", disableTooltips:false});
+    }, 10);
+};
+
+$("#example-table").tabulator({
+    columns:[
+        {title:"Offer", field:"offer_id", sorter:"string"},
+        {title:"Departure", field:"departure", sorter:"date", align:"center"},
+        {title:"Arrival", field:"arrival", sorter:"date", align:"center"},
+        {title:"Days", field:"days", sorter:"number", align:"center"},
+        {title:"Seats", field:"available_seats", align:"center"},
+        {title:"Price", field:"price", sorter:"number", align:"right"},
+        {title:"Price change", field:"line", width:120, formatter:lineFormatter},
+    ],
+    // responsiveLayout:true,
+    // layout:"fitColumns",
+    layout:"fitDataFill",
+    pagination:"local", //enable local pagination
+    paginationSize:25, // this option can take any positive integer value (default = 10)
+
+    rowClick:function(e, row){ //trigger an alert message when the row is clicked
+        window.open('https://oferty.tui.pl/new-rezerwacja-oferty?id_o='+row.getData().offer_id+'&trv=ch&ad_count=1&ch_count=0&in_count=0');
+    },
+});
+
+$("#example-table").tabulator("setData","http://localhost:3000/json");
+</script>

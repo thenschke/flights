@@ -1,0 +1,3 @@
+rails generate model Offer scraper_id:integer offer_id:integer from:string to:string departure:date arrival:date active:integer
+rails generate model Price scraper_id:integer offer_id:integer price:integer available_seats:integer active:integer
+rails generate model Scraper started_at:datetime finished_at:datetime initiated_by:string
