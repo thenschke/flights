@@ -33,5 +33,5 @@ $("#example-table").tabulator({
     },
 });
 
-$("#example-table").tabulator("setData","http://localhost:3000/json");
+$("#example-table").tabulator("setData","<%= ENV['URL_HOST'] %>/json");
 </script>
