@@ -49,6 +49,6 @@ test:
 #
 production:
   <<: *default
-  database: flights_production
+  database: flights
   username: flights
   password: <%= ENV['FLIGHTS_DATABASE_PASSWORD'] %>
