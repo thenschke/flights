@@ -55,5 +55,5 @@ production:
   database: flights
   username: flights
   port: 3306
-  host: mysql2://flights.cl679rv81ej0.eu-central-1.rds.amazonaws.com
+  host: flights.cl679rv81ej0.eu-central-1.rds.amazonaws.com
   password: <%= ENV['FLIGHTS_DATABASE_PASSWORD'] %>
