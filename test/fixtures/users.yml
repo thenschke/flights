@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  phone_number: MyString
+  nickname: MyString
+  last_seen: 2017-10-26 16:10:57
+  active: 1
+
+two:
+  phone_number: MyString
+  nickname: MyString
+  last_seen: 2017-10-26 16:10:57
+  active: 1

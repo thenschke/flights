@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171023112315) do
+ActiveRecord::Schema.define(version: 20171027130510) do
+
+  create_table "communications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "phone_number"
+    t.integer "user_id"
+    t.integer "offer_id"
+    t.string "medium"
+    t.string "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "offers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "scraper_id"
@@ -34,10 +44,28 @@ ActiveRecord::Schema.define(version: 20171023112315) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "saves", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "user_id"
+    t.integer "offer_id"
+    t.integer "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "scrapers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "started_at"
     t.datetime "finished_at"
     t.string "initiated_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "output"
+  end
+
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "phone_number"
+    t.string "nickname"
+    t.datetime "last_seen"
+    t.integer "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -1,3 +1,7 @@
 rails generate model Offer scraper_id:integer offer_id:integer from:string to:string departure:date arrival:date active:integer
 rails generate model Price scraper_id:integer offer_id:integer price:integer available_seats:integer active:integer
 rails generate model Scraper started_at:datetime finished_at:datetime initiated_by:string
+
+rails generate model User phone_number:string nickname:string last_seen:datetime active:integer
+rails generate model Save user_id:integer offer_id:integer active:integer
+rails generate model Communication phone_number:string user_id:integer offer_id:integer medium:string type:string

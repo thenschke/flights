@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  phone_number: MyString
+  user_id: 1
+  offer_id: 1
+  medium: MyString
+  type: 
+
+two:
+  phone_number: MyString
+  user_id: 1
+  offer_id: 1
+  medium: MyString
+  type: 

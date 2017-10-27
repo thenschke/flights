@@ -19,6 +19,27 @@ class ApplicationController < ActionController::Base
     attr_reader :offer_id
   end
 
+  def changechecker
+    if params[:status]=="true"
+      state=1
+    else
+      state=0
+    end
+
+    offer_id=params[:offer_id]
+    user_id=session[:user_id]
+    Save.loveit(user_id,offer_id,state)
+
+  end
+
+  def signin
+    phone = params[:phone].delete('^0-9')
+    User.signin(phone)
+    session[:user_id]=User.where(phone_number: phone, active: 1).order(last_seen: :asc).last.id
+
+    redirect_to "/?list=on"
+  end
+
   def scrape_tui
 
       @entriesArray = []
@@ -49,7 +70,16 @@ class ApplicationController < ActionController::Base
   end
 
   def results
+    last_update = Price.where('created_at >= ?', 4.hours.ago).count
+    if last_update==0
+      Price.saveResults()
+    end
     render template: 'results'
+  end
+
+  def price_update
+      Price.saveResults()
+      redirect_to root_path
   end
 
   def results_json

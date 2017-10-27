@@ -19,6 +19,9 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+# SMS notification
+gem 'twilio-ruby'
+
 gem 'yaml_db'
 
 #nokogiri scraper
