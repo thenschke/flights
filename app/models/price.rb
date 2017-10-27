@@ -2,8 +2,8 @@ class Price < ApplicationRecord
 
   def self.saveResults()
 
-    account_sid = ''
-    auth_token = ''
+    account_sid = ENV['TWILIO_SID']
+    auth_token = ENV['TWILIO_TOKEN']
 
     initiated_by = "website"
 
