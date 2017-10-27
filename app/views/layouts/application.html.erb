@@ -21,7 +21,10 @@
     <link href="/css/animate.min.css" rel="stylesheet" type="text/css">
 
     <!-- Background Slider -->
-    <link href="/js/vegas/vegas.min.css" rel="stylesheet" type="text/css">
+    <link href="/css/vegas/vegas.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Phone number -->
+    <link rel="stylesheet" href="/css/intlTelInput.css">
 
     <!-- Custom CSS -->
     <link href="/css/csoon.css" rel="stylesheet">
@@ -80,7 +83,7 @@
 
     input[type="text"] {
       font-size: 30px;
-      width:250px;
+      width:280px;
       padding: 6px 10px;
       border: none;
       border-collapse: separate;
@@ -91,6 +94,7 @@
 
     input[type="text"] {
       opacity: 0.5;
+      color: #333;
     }
 
     input[type="text"]:hover,
@@ -130,6 +134,14 @@
     .vPoor {
         background-color: #EF7676!important;
     }
+
+    .intl-tel-input {
+      font-size: 45px;
+    }
+
+    .country-list {
+      width: 900px;
+    }
     </style>
 </head>
 
@@ -158,7 +170,7 @@
             <p class="intro-text wow fadeIn" data-wow-duration="7s" data-wow-delay="3.7s">Podaj numer telefonu</p>
             <p class="wow fadeIn" data-wow-duration="7s" data-wow-delay="3.7s">
               <form action="/signin" method="GET">
-                <input type="text" class="phone" name="phone" placeholder="+48510002555"/>
+                <input type="text" class="phone" id="phone" name="phone" type="tel" />
                 <button type="submit" id="phone_submit" style="background-color: transparent; border: 0; cursor: pointer;">
                     <i class="fa fa-arrow-circle-right" style="font-size: 50px; position: relative; top: 7px; color: #EEE"></i>
                 </button>
@@ -275,6 +287,17 @@
                   }
               }
           });
+      });
+    </script>
+
+    <script src="/js/intlTelInput.js"></script>
+    <script>
+      $("#phone").intlTelInput({
+        autoPlaceholder: true,
+        customPlaceholder: "510002555",
+        initialCountry: "pl",
+        preferredCountries: [ "pl", "de" ],
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.0.3/js/utils.js" // just for formatting/placeholders etc
       });
     </script>
 
