@@ -21,6 +21,6 @@
 
 set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log"}
 
-every 3.hours do
+every 1.hours do
   runner "Price.saveResults"
 end
