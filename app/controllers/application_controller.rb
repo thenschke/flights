@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
     User.signin(phone)
     session[:user_id]=User.where(phone_number: phone, active: 1).order(last_seen: :asc).last.id
 
-    redirect_to "/?list=on&phone=#{phone}"
+    redirect_to "/?list=on"
   end
 
   def scrape_tui

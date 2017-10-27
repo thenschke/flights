@@ -85,7 +85,7 @@
     input[type="text"] {
       font-size: 36px;
       font-family: 'Roboto Condensed', sans-serif!important;
-      width:280px;
+      width:260px;
       padding: 6px 10px;
       border: none;
       border-collapse: separate;
@@ -144,6 +144,25 @@
     .country-list {
       width: 900px;
     }
+
+    #error-msg {
+      color: red;
+    }
+    #valid-msg {
+      color: #00C900;
+    }
+    input.error {
+      border: 1px solid #FF7C7C;
+    }
+    .hide {
+      display: none;
+    }
+    .active_button {
+      color: #EEE;
+    }
+    .inactive_button {
+      color: #CCC;
+    }
     </style>
 </head>
 
@@ -175,7 +194,7 @@
                 <input type="text" class="phone" id="phone" name="phone_short" type="tel" />
                 <input type="hidden" id="hidden" name="phone" />
                 <button type="submit" id="phone_submit" style="background-color: transparent; border: 0; cursor: pointer;">
-                    <i class="fa fa-arrow-circle-right" style="font-size: 50px; position: relative; top: 7px; color: #EEE"></i>
+                    <i class="fa fa-arrow-circle-right" id="phone_button" style="font-size: 50px; position: relative; top: 7px;" class="inactive_button"></i>
                 </button>
               </form>
             </p>
@@ -225,6 +244,8 @@
   <script type="text/javascript" src="/js/jquery.sparkline.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
+  <script src="/js/intlTelInput.js"></script>
+  <script src="/js/isValidNumber.js"></script>
 
 
   <script type="text/javascript">
@@ -270,9 +291,6 @@
     </script>
 
 
-
-
-
     <script>
       $(function () {
         $('[data-toggle="tooltip"]').tooltip()
@@ -293,16 +311,7 @@
       });
     </script>
 
-    <script src="/js/intlTelInput.js"></script>
     <script>
-      $("#phone").intlTelInput({
-        autoPlaceholder: true,
-        separateDialCode: false,
-        customPlaceholder: "510002555",
-        initialCountry: "pl",
-        preferredCountries: [ "pl", "de" ],
-        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.0.3/js/utils.js" // just for formatting/placeholders etc
-      });
       $("form").submit(function() {
         $("#hidden").val($("#phone").intlTelInput("getNumber"));
       });
