@@ -2,6 +2,9 @@ class Price < ApplicationRecord
 
   def self.saveResults()
 
+    account_sid = ''
+    auth_token = ''
+
     initiated_by = "website"
 
     results = Offer.where(active: 1)
@@ -55,8 +58,6 @@ class Price < ApplicationRecord
                     wolnych="wolnych"
                   end
 
-                  account_sid = 'ACb9d1e55b71e1fe1a166fd1bda62e7a86'
-                  auth_token = '295a0c999fbdaa8038fd3e3b9056fc29'
                   msg_sms = "Zmiana ceny lotu (#{results.departure} - #{results.arrival}) z #{old_price.price} na #{price}. Zostalo #{seats} #{wolnych} miejsc!"
 
                   r = Save.where(offer_id: results.offer_id, active: 1)
