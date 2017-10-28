@@ -1,13 +1,17 @@
 class Price < ApplicationRecord
 
-  def self.saveResults()
+  def self.saveResults(id)
 
     account_sid = ENV['TWILIO_SID']
     auth_token = ENV['TWILIO_TOKEN']
-
     initiated_by = "website"
 
-    results = Offer.where(active: 1)
+    if id.to_i>0
+        results = Offer.where(active: 1, offer_id: id)
+    else
+        results = Offer.where(active: 1)
+    end
+
     results.each do |results|
 
       scraper = Scraper.create(

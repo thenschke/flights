@@ -5,8 +5,6 @@ class ApplicationController < ActionController::Base
   require 'nokogiri'
   require 'watir'
 
-#protect_from_forgery with: :null_session
-#skip_before_action :verify_authenticity_token
 
   class Entry
     def initialize(date_from, date_to, offer_id)
@@ -40,7 +38,7 @@ class ApplicationController < ActionController::Base
     redirect_to "/?list=on"
   end
 
-  def scrape_tui
+  def offer_update
 
       @entriesArray = []
 
@@ -64,44 +62,26 @@ class ApplicationController < ActionController::Base
           end
         end
       end
-      # render results
-      Price.saveResults()
-    redirect_to root_path
+    redirect_to '/worker_result'
   end
 
   def results
-    last_update = Price.where('created_at >= ?', 4.hours.ago).count
-    if last_update==0
-      Price.saveResults()
-    end
     render template: 'results'
   end
 
+  def worker_result
+    render plain: "OK updated: #{params[:id]}"
+  end
+
   def price_update
-      Price.saveResults()
-      redirect_to root_path
-  end
-
-  def results_json
-
-    require 'json'
-    last_update = Price.where('created_at >= ?', 4.hours.ago).count
-    if last_update==0
-      Price.saveResults()
-    end
-      results = Offer.order(departure: :asc).where(active: 1)
-      @result = results.map do |u|
-          days = (u.arrival - u.departure).to_i
-          item = Price.order(created_at: :desc).where("offer_id = ? AND active = ?", u.offer_id, 1).first
-          line = Price.order(created_at: :asc).where(offer_id: u.offer_id).pluck(:price)
-          { :offer_id => u.offer_id, :departure => u.departure, :arrival => u.arrival, :available_seats => item.available_seats, :price => item.price, :line => line, :days => days }
+      if params[:id]
+        @id=params[:id]
+      else
+        @id=0
       end
-      render json: @result
+      Price.saveResults(@id)
+      redirect_to "/worker_result?id=#{@id}"
   end
 
-  def scrape_tui_price
-      Price.saveResults()
-      redirect_to root_path
-  end
 
 end
