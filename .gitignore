@@ -12,6 +12,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/config/schedule.rb
 
 /node_modules
 /yarn-error.log
