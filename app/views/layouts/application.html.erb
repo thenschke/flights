@@ -163,6 +163,34 @@
     .inactive_button {
       color: #CCC;
     }
+
+    .heart_animation {
+    	animation-name: color_change;
+    	animation-duration: 1s;
+    	animation-iteration-count: infinite;
+    	animation-direction: normal;
+    }
+
+    @-webkit-keyframes color_change {
+    	to { color: #CCC; }
+    	from { color: #FF337D; }
+    }
+    @-moz-keyframes color_change {
+    	to { color: #CCC; }
+    	from { color: #FF337D; }
+    }
+    @-ms-keyframes color_change {
+    	to { color: #CCC; }
+    	from { color: #FF337D; }
+    }
+    @-o-keyframes color_change {
+    	to { color: #CCC; }
+    	from { color: #FF337D; }
+    }
+    @keyframes color_change {
+    	to { color: #CCC; }
+    	from { color: #FF337D; }
+    }
     </style>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -201,7 +229,7 @@
             </ul>
           <% else %>
             <p class="intro-text wow fadeIn" data-wow-duration="7s" data-wow-delay="3.7s">Podaj numer telefonu</p>
-            <p class="wow fadeIn" data-wow-duration="7s" data-wow-delay="4s" style="color: #CCC">damy Ci znać o zmianie ceny lotu, który polubisz <i class="fa fa-heart" aria-hidden="true" style="color: #DDD"></i></p>
+            <p class="wow fadeIn" data-wow-duration="7s" data-wow-delay="4s" style="color: #CCC">damy Ci znać o zmianie ceny lotu, który polubisz <i class="fa fa-heart heart_animation" aria-hidden="true"></i></p>
             <p class="wow fadeIn" data-wow-duration="7s" data-wow-delay="3.7s">
               <form id="signin" action="/signin" method="GET">
                 <input type="text" class="phone" id="phone" name="phone_short" type="tel" />
