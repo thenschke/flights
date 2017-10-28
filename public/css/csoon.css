@@ -424,9 +424,10 @@ a.fa {
     width: 25px;
 }
 .no-video-bg {
-    background: url(../img/1.jpg);
+    background: url(/img/1.jpg);
     background-repeat: no-repeat;
     background-position: center center;
+    background-size:     cover;
     width: 100%;
     height: 100%;
     z-index: 0;
