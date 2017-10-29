@@ -22,6 +22,9 @@ gem 'uglifier', '>= 1.3.0'
 # SMS notification
 gem 'twilio-ruby'
 
+# env rails
+gem 'dotenv-rails', :groups => [:development, :test]
+
 #AWS SDK for SQS
 gem 'aws-sdk-sqs'
 
