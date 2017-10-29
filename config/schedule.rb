@@ -22,5 +22,5 @@
 set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log"}
 
 every 1.hours do
-  runner "Price.saveResults"
+  runner bundle exec bin/rails runner PriceupdateJob.perform_now
 end

@@ -2,8 +2,7 @@ class Price < ApplicationRecord
 
   def self.saveResults(id)
 
-    account_sid = ENV['TWILIO_SID']
-    auth_token = ENV['TWILIO_TOKEN']
+
     initiated_by = "website"
 
     if id.to_i>0
@@ -68,6 +67,9 @@ class Price < ApplicationRecord
                   r.each do |u|
 
                     phone_number = User.where(id: u.user_id).last.phone_number
+
+                    account_sid = "#{ENV['TWILIO_SID']}"
+                    auth_token = "#{ENV['TWILIO_TOKEN']}"
 
                     @client = Twilio::REST::Client.new account_sid, auth_token
                     @client.api.account.messages.create({

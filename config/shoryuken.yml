@@ -1,0 +1,16 @@
+aws:
+  access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
+  region: 'eu-central-1'
+  secret_access_key:  <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+  receive_message:
+    attribute_names:
+      - ApproximateReceiveCount
+      - SentTimestamp
+  logfile: log/shoryuken.log
+  pidfile: log/shoryuken.pid
+concurrency: 5
+delay: 100
+timeout: 100
+wait_time_second: 6
+queues:
+  - #{ENV[RAILS_ENV]}_priceupdate

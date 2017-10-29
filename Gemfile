@@ -22,6 +22,12 @@ gem 'uglifier', '>= 1.3.0'
 # SMS notification
 gem 'twilio-ruby'
 
+#AWS SDK for SQS
+gem 'aws-sdk-sqs'
+
+#SQS
+gem 'shoryuken'
+
 gem 'yaml_db'
 
 #nokogiri scraper

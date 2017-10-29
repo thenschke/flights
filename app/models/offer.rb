@@ -1,5 +1,6 @@
 class Offer < ApplicationRecord
 
+
   def self.saveResults(entriesArray)
 
     from_airport = "POZ"

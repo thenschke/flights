@@ -8,6 +8,9 @@ sudo kill $(cat /opt/nginx/logs/nginx.pid)
 sudo rm -rf /home/ec2-user/flights/tmp
 sudo mkdir /home/ec2-user/flights/tmp
 sudo chmod 777 /home/ec2-user/flights/tmp
+sudo chmod 777 /home/ec2-user/flights/log
 sudo chmod 777 /home/ec2-user/flights/Gemfile.lock
+
+bundle exec shoryuken -R -C /home/ec2-user/flights/config/shoryuken.yml -L /home/ec2-user/flights/log/worker.log
 
 sudo /opt/nginx/sbin/nginx
