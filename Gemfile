@@ -23,7 +23,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'twilio-ruby'
 
 # env rails
-gem 'dotenv-rails', :groups => [:development, :test]
+gem 'dotenv-rails', :groups => [:development, :test, :production]
 
 #AWS SDK for SQS
 gem 'aws-sdk-sqs'
