@@ -13,4 +13,4 @@ delay: 100
 timeout: 100
 wait_time_second: 6
 queues:
-  - #{ENV[RAILS_ENV]}_priceupdate
+  - production_priceupdate
