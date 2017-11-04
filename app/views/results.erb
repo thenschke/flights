@@ -18,6 +18,7 @@
 
           <table class="table table-responsive table-hover">
                 <col id="love" />
+                <col id="from" />
                 <col id="departure" />
                 <col id="arrival" />
                 <col id="days" />
@@ -29,7 +30,8 @@
           	<thead>
           		<tr>
                 <th><i class="fa fa-heart" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Kliknij w serduszko a otrzymasz powiadomienie o zmianie ceny"></i></th>
-                <th>To</th>
+                <th>From</th>
+                <th>Dep</th>
           			<th>Return</th>
                 <th>Days</th>
                 <th>Seats</th>
@@ -41,49 +43,53 @@
           	</thead>
           	<tbody>
 
-          <%
+            <%
               results = Offer.order(departure: :asc).where(active: 1)
               results.each do |u|
-                days = (u.arrival - u.departure).to_i
-                item = Price.order(created_at: :desc).where(offer_id: u.offer_id).first
-                line = Price.order(created_at: :asc).where(offer_id: u.offer_id).pluck(:price)
-                if session[:user_id]
-                  love=Save.where(user_id: session[:user_id], offer_id: u.offer_id, active:1).count
-                  if love>0
-                    checked="checked"
+                price = Price.where(offer_id: u.offer_id, active: 1).count
+
+                if price > 0
+
+                  days = (u.arrival - u.departure).to_i
+                  item = Price.order(created_at: :desc).where(offer_id: u.offer_id).first
+                  line = Price.order(created_at: :asc).where(offer_id: u.offer_id).pluck(:price)
+                  if session[:user_id]
+                    love=Save.where(user_id: session[:user_id], offer_id: u.offer_id, active:1).count
+                    if love>0
+                      checked="checked"
+                    else
+                      checked=""
+                    end
                   else
-                    checked=""
+                    checked="disabled='disabled'"
                   end
-                else
-                  checked="disabled='disabled'"
-                end
 
-                if item.available_seats.nil?
-                    seats=0
-                else
-                    seats=item.available_seats
-                end
+                  if item.available_seats.nil?
+                      seats=0
+                  else
+                      seats=item.available_seats
+                  end
 
-                if item.price
-                  price=item.price
-                else
-                  price=0
-                end
-          %>
-                  <tr>
-                    <td><input type='checkbox' data-offerid='<%= u.offer_id %>' class='offerchecker' <%= checked %> /></td>
-                    <td><%= u.departure.strftime("%d/%m") %></td>
-                    <td><%= u.arrival.strftime("%d/%m") %></td>
-                    <td><%= days %></td>
-                    <td><%= seats %></td>
-                    <td class="price"><%= price %></td>
-                    <td><span class="inlinesparkline"><%= line.to_sentence(:last_word_connector => ",") %></span></td>
-                    <td><%= Offer.getTemp(u.departure) %></td>
-                    <td><a href="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=<%= u.offer_id %>&trv=ch&ad_count=1&ch_count=0&in_count=0" target="_blank"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></td>
-                  </tr>
-          <%
-                end
-          %>
+                  if item.price
+                    price=item.price
+                  else
+                    price=0
+                  end
+                  %>
+                    <tr>
+                      <td><input type='checkbox' data-offerid='<%= u.offer_id %>' class='offerchecker' <%= checked %> /></td>
+                      <td><%= u.from %></td>
+                      <td><%= u.departure.strftime("%d/%m") %></td>
+                      <td><%= u.arrival.strftime("%d/%m") %></td>
+                      <td><%= days %></td>
+                      <td><%= seats %></td>
+                      <td class="price"><%= price %></td>
+                      <td><span class="inlinesparkline"><%= line.to_sentence(:last_word_connector => ",") %></span></td>
+                      <td><%= Offer.getTemp(u.departure) %></td>
+                      <td><a href="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=<%= u.offer_id %>&trv=ch&ad_count=1&ch_count=0&in_count=0" target="_blank"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></td>
+                    </tr>
+                <% end %>
+            <% end %>
             </tbody>
           </table>
         </div>

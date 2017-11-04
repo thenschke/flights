@@ -21,6 +21,6 @@
 
 set :output, {:error => "log/cron_error_log.log", :standard => "log/cron_log.log"}
 
-every 3.hours do
+every 12.hours do
   bundle exec dotenv bin/rails runner -e production PriceupdateJob.perform_now
 end

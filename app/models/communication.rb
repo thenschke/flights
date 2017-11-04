@@ -2,7 +2,7 @@ class Communication < ApplicationRecord
 
   self.inheritance_column = "inheritance_type"
 
-  def self.sentSMS(user_id, offer_id)
+  def self.sentSMS(user_id, offer_id, msg_sms)
 
     phone_number = User.where(id: user_id).last.phone_number
     medium="SMS"
@@ -13,7 +13,8 @@ class Communication < ApplicationRecord
       user_id: user_id,
       phone_number: phone_number,
       medium: medium,
-      type: type
+      type: type,
+      msg_content: msg_sms
     )
   end
 end

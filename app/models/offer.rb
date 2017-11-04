@@ -3,8 +3,6 @@ class Offer < ApplicationRecord
 
   def self.saveResults(entriesArray)
 
-    from_airport = "POZ"
-    to_airport = "RKT"
     initiated_by = "website"
 
     scraper = Scraper.create(
@@ -21,8 +19,8 @@ class Offer < ApplicationRecord
             offer_id: entry.offer_id,
             departure: entry.date_from,
             arrival: entry.date_to,
-            from: from_airport,
-            to: to_airport,
+            from: entry.from_airport,
+            to: entry.to_airport,
             scraper_id: scraper.id,
             active: 1
           )
@@ -31,8 +29,8 @@ class Offer < ApplicationRecord
           self.where(id: id).update_all(
             departure: entry.date_from,
             arrival: entry.date_to,
-            from: from_airport,
-            to: to_airport,
+            from: entry.from_airport,
+            to: entry.to_airport,
             scraper_id: scraper.id,
             active: 1
           )
