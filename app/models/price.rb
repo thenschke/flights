@@ -14,7 +14,7 @@ class Price < ApplicationRecord
     results.each do |results|
 
       recent = self.where("offer_id", "created_at < ?", results.offer_id, 30.minutes.ago).count
-      if recent == 0
+      #if recent == 0
 
         scraper = Scraper.create(
           started_at: Time.now,
@@ -113,7 +113,7 @@ class Price < ApplicationRecord
             finished_at: Time.now,
             output: msg
           )
-      end
+      #end
 
       Offer.where("departure < ?", Time.now).update_all(
         active: 0
