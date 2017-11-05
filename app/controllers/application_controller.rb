@@ -73,6 +73,9 @@ class ApplicationController < ActionController::Base
 
   def results
     render template: 'results'
+
+    @from_airport = params[:from_airport]
+
   end
 
   def worker_result

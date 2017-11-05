@@ -14,7 +14,52 @@
           end
           %>
           <h5 style="margin:0; color: #FF337D">Hej <%= user %>!</h5>
-          <h2>Flights Poznan <i class="fa fa-angle-double-right" aria-hidden="true"></i> Dubai </h2>
+          <h2>Flights <i class="fa fa-angle-double-right" aria-hidden="true"></i> Dubai </h2>
+
+          <%
+
+          if params[:from_airport] == "KTW"
+            ktw = "checked"
+          elsif params[:from_airport] == "WAW"
+            waw = "checked"
+          elsif params[:from_airport] == "POZ"
+            poz = "checked"
+          else
+            all = "checked"
+          end
+          %>
+
+          <div class="row" style="margin: 0px 0px 5px 3px;">
+            From:
+            <div class="radio radio-info pull-left" style="margin: 0 10px;">
+                <input type="radio" name="from_airport" value="all" onclick="javascript:window.location.href='/?list=on';" <%= all %>>
+              <label>
+                All
+              </label>
+            </div>
+
+            <div class="radio radio-info pull-left" style="margin-right: 10px;">
+                <input type="radio" name="from_airport" value="POZ" onclick="javascript:window.location.href='/?list=on&from_airport=POZ';" <%= poz %>>
+              <label title="Poznan">
+                POZ
+              </label>
+            </div>
+
+            <div class="radio radio-info pull-left" style="margin-right: 10px;">
+                <input type="radio" name="from_airport" value="WAW" onclick="javascript:window.location.href='/?list=on&from_airport=WAW';" <%= waw %>>
+              <label title="Warszawa">
+                WAW
+              </label>
+            </div>
+
+            <div class="radio radio-info pull-left" style="margin-right: 10px;">
+                <input type="radio" name="from_airport" value="KTW" onclick="javascript:window.location.href='/?list=on&from_airport=KTW';" <%= ktw %>>
+              <label title="Katowice">
+                KTW
+              </label>
+            </div>
+          </div>
+
 
           <table class="table table-responsive table-hover">
                 <col id="love" />
@@ -44,8 +89,14 @@
           	<tbody>
 
             <%
+            if params[:from_airport]
+              q = "%#{params[:from_airport]}%"
+              results = Offer.order(departure: :asc).where("from_airport LIKE ?", q)
+            else
               results = Offer.order(departure: :asc).where(active: 1)
+            end
               results.each do |u|
+
                 price = Price.where(offer_id: u.offer_id, active: 1).count
 
                 if price > 0
@@ -78,7 +129,7 @@
                   %>
                     <tr>
                       <td><input type='checkbox' data-offerid='<%= u.offer_id %>' class='offerchecker' <%= checked %> /></td>
-                      <td><%= u.from %></td>
+                      <td><%= u.from_airport %></td>
                       <td><%= u.departure.strftime("%d/%m") %></td>
                       <td><%= u.arrival.strftime("%d/%m") %></td>
                       <td><%= days %></td>

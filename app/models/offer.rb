@@ -19,8 +19,8 @@ class Offer < ApplicationRecord
             offer_id: entry.offer_id,
             departure: entry.date_from,
             arrival: entry.date_to,
-            from: entry.from_airport,
-            to: entry.to_airport,
+            from_airport: entry.from_airport,
+            to_airport: entry.to_airport,
             scraper_id: scraper.id,
             active: 1
           )
@@ -29,8 +29,8 @@ class Offer < ApplicationRecord
           self.where(id: id).update_all(
             departure: entry.date_from,
             arrival: entry.date_to,
-            from: entry.from_airport,
-            to: entry.to_airport,
+            from_airport: entry.from_airport,
+            to_airport: entry.to_airport,
             scraper_id: scraper.id,
             active: 1
           )
