@@ -1,5 +1,7 @@
 class Price < ApplicationRecord
 
+  belongs_to :offer, class_name: "Offer", foreign_key: "offer_id", :primary_key => 'offer_id'
+
   def self.saveResults(id)
 
 
@@ -58,13 +60,15 @@ class Price < ApplicationRecord
 
                   if price.to_i!=old_price.price.to_i
                     # SMS
-                    if seats.to_i <5
-                      wolnych="wolne"
+                    if seats.to_i <2
+                      wolnych="wolne miejsce"
+                    elsif seats.to_i <5
+                      wolnych="wolne miejsca"
                     else
-                      wolnych="wolnych"
+                      wolnych="wolnych miejsc"
                     end
 
-                    msg_sms = "Zmiana ceny lotu (#{results.departure} - #{results.arrival}) z #{old_price.price} na #{price}. Zostalo #{seats} #{wolnych} miejsc!"
+                    msg_sms = "Zmiana ceny lotu (#{results.departure} - #{results.arrival}) z #{old_price.price} na #{price}. Zostalo #{seats} #{wolnych}!"
 
                     r = Save.where(offer_id: results.offer_id, active: 1)
                     r.each do |u|

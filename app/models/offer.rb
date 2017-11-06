@@ -1,5 +1,6 @@
 class Offer < ApplicationRecord
 
+  has_many :prices, class_name: "Price", foreign_key: "offer_id", :primary_key => 'offer_id'
 
   def self.saveResults(entriesArray)
 

@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   get 'price_update' => 'application#price_update'
 
   get 'worker_result' => 'application#worker_result'
+  get 'result_json' => 'application#result_json'
 
 end
