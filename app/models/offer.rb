@@ -1,6 +1,7 @@
 class Offer < ApplicationRecord
 
   has_many :prices, class_name: "Price", foreign_key: "offer_id", :primary_key => 'offer_id'
+  has_many :active_prices, -> { where active: 1 }, class_name: "Price", foreign_key: "offer_id", :primary_key => 'offer_id'
 
   def self.saveResults(entriesArray)
 

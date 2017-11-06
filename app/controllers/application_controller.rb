@@ -83,11 +83,19 @@ class ApplicationController < ActionController::Base
   end
 
   def result_json
-    @offers = Price.where(active: 1).joins(:offer).select('offers.offer_id,offers.from_airport,offers.to_airport,offers.departure,offers.arrival,prices.price,prices.available_seats').where("offers.active= ?", 1).order("offers.departure ASC") 
 
-    #@offers = Offer.where(active: 1).order(departure: :asc)
-    render json: @offers
-
+    @offer = Offer.where(active: 1).order(departure: :asc)
+    @prices = Price.where(active: 1)
+    render :json => { :success => true,
+      :offer => @offer.as_json(
+          :except => [:id,:created_at, :updated_at, :scraper_id, :active],
+          :include => {
+            :active_prices => {
+              :except => [:id, :created_at, :updated_at, :scraper_id, :active, :offer_id]
+            }
+          }
+      )
+    }
   end
 
   def price_update
