@@ -22,6 +22,9 @@ gem 'uglifier', '>= 1.3.0'
 # SMS notification
 gem 'twilio-ruby'
 
+# silent scrapper 
+gem 'headless'
+
 # env rails
 gem 'dotenv-rails', :groups => [:development, :test, :production]
 

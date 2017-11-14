@@ -4,9 +4,6 @@ class Price < ApplicationRecord
 
   def self.saveResults(id)
 
-
-    initiated_by = "website"
-
     if id.to_i>0
         results = Offer.where(active: 1, offer_id: id)
     else
@@ -15,113 +12,160 @@ class Price < ApplicationRecord
 
     results.each do |results|
 
-      recent = self.where("offer_id", "created_at < ?", results.offer_id, 30.minutes.ago).count
+      offer_id=results.offer_id
+
+      self.where(offer_id: offer_id, active: -1).update_all(
+        active: -9
+      )
+
+      #recent = self.where("offer_id", "created_at < ?", results.offer_id, 30.minutes.ago).count
       #if recent == 0
 
-        scraper = Scraper.create(
-          started_at: Time.now,
-          initiated_by: initiated_by
-        )
-
-        url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{results.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
-        uri=URI.parse(url)
         msg=""
 
-        begin
-          uri.open(redirect: false)
-          doc = Nokogiri::HTML(open(url))
-          price = doc.css('.booking-summary-price-offer').text
-          price = price[0...-3].to_i
-          seats = doc.css('.cnv-free-seats').text
-          seats = seats.delete "\s\n"
-          seats = seats[-1]
+        source = Source.where(active: 1)
+        source.each do |source|
 
-              exists = self.where(offer_id: results.offer_id).count
+          scraper = Scraper.create(
+            started_at: Time.now,
+            initiated_by: source.short_name
+          )
+          scraper = scraper.id
 
-              if exists > 0
+          if source.short_name=="TUI"
 
-                  old_price = self.where(offer_id: results.offer_id, active:1).last
+            begin
+              url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{results.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
+              uri=URI.parse(url)
+              uri.open(redirect: false)
+              doc = Nokogiri::HTML(open(url))
+                price = doc.css('.booking-summary-price-offer').text
+                price = price[0...-3].to_i
+                seats = doc.css('.cnv-free-seats').text
+                seats = seats.delete "\s\n"
+                seats = seats[-1]
+                source_price="TUI"
 
-                  # deactive old price
-                  self.where(offer_id: results.offer_id).update_all(
-                    active: 0
-                  )
+                msg=msg+"new price #{price}; #{seats}; #{source_price};"
 
-                  # create a new price
-                  self.create(
-                    offer_id: results.offer_id,
-                    price: price,
-                    available_seats: seats,
-                    scraper_id: scraper.id,
-                    active: 1
-                  )
+                self.savePrice(offer_id,price,seats,scraper,source_price)
 
-                  msg=msg+"update offer #{results.offer_id}: #{old_price.price} > #{price}; #{old_price.available_seats} > #{seats};"
+            rescue OpenURI::HTTPRedirect => redirect
 
-                  if price.to_i!=old_price.price.to_i
-                    # SMS
-                    if seats.to_i <2
-                      wolnych="wolne miejsce"
-                    elsif seats.to_i <5
-                      wolnych="wolne miejsca"
-                    else
-                      wolnych="wolnych miejsc"
-                    end
+                msg=msg+"error: with redirecting"
 
-                    msg_sms = "Zmiana ceny lotu (#{results.departure} - #{results.arrival}) z #{old_price.price} na #{price}. Zostalo #{seats} #{wolnych}!"
-
-                    r = Save.where(offer_id: results.offer_id, active: 1)
-                    r.each do |u|
-
-                      phone_number = User.where(id: u.user_id).last.phone_number
-
-                      account_sid = "#{ENV['TWILIO_SID']}"
-                      auth_token = "#{ENV['TWILIO_TOKEN']}"
-
-                      @client = Twilio::REST::Client.new account_sid, auth_token
-                      @client.api.account.messages.create({
-                          :from => 'DoDubaju',
-                          :to => phone_number,
-                          :body => msg_sms,
-                      })
-
-                      Communication.sentSMS(u.user_id,results.offer_id,msg_sms)
-                    end
-                  end
-              else
-                # create a new price
-                self.create(
-                  offer_id: results.offer_id,
-                  price: price,
-                  available_seats: seats,
-                  scraper_id: scraper.id,
-                  active: 1
+                self.where(offer_id: results.offer_id).update_all(
+                  active: 0
                 )
+                Offer.where(offer_id: results.offer_id).update_all(
+                  active: 0
+                )
+            end
 
-                msg=msg+"new price #{price}; #{seats};"
-              end
+          elsif source.short_name=="ENT"
 
-          rescue OpenURI::HTTPRedirect => redirect
+            begin
+              url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=2,2=0,3=0"
+              headless = Headless.new
+              headless.start
+                b = Watir::Browser.start url
+                doc = Nokogiri::HTML.parse(b.html)
+                price = doc.css('.price.total-value').text
+                price = price[0...-3].gsub!(',','').to_i
+                seats=10
+                source_price="ENT"
+              b.close
+              headless.destroy
 
-            msg=msg+"error: with redirecting"
+              msg=msg+"new price #{price}; #{seats}; #{source_price};"
 
-            self.where(offer_id: results.offer_id).update_all(
-              active: 0
-            )
-            Offer.where(offer_id: results.offer_id).update_all(
-              active: 0
-            )
+              self.savePrice(offer_id,price,seats,scraper,source_price)
+
+            rescue OpenURI::HTTPRedirect => redirect
+
+              msg=msg+"error: with redirecting"
+
+              self.where(offer_id: results.offer_id).update_all(
+                active: 0
+              )
+              Offer.where(offer_id: results.offer_id).update_all(
+                active: 0
+              )
+            end
           end
 
-          Scraper.where(:id => scraper.id).update_all(
+          Scraper.where(:id => scraper).update_all(
             finished_at: Time.now,
             output: msg
           )
-      #end
+        end
+        self.calculationPrice(offer_id)
+      end
+    end
+
+
+  def self.savePrice(offer_id,price,seats,scraper,source_price)
+
+    self.create(
+      offer_id: offer_id,
+      price: price,
+      available_seats: seats,
+      scraper_id: scraper,
+      active: -1,
+      source: source_price
+    )
+
+  end
+
+  def self.calculationPrice(offer_id)
+        exists_new = self.where(offer_id: offer_id, active: -1).count
+        exists_old = self.where(offer_id: offer_id, active: 1).count
+
+        if exists_new && exists_old
+
+          old_price=self.where(offer_id: offer_id, active: 1).order(created_at: :desc).first
+          new_price=self.where(offer_id: offer_id, active: -1).order(price: :asc).first
+
+          price = new_price.price
+          seats = new_price.available_seats
+          source_price = new_price.source
+
+          offer = Offer.where(offer_id: offer_id, active: 1).last
+
+            if price.to_i!=old_price.price.to_i
+                      # SMS
+                      if seats.to_i <2
+                        wolnych="wolne miejsce"
+                      elsif seats.to_i <5
+                        wolnych="wolne miejsca"
+                      else
+                        wolnych="wolnych miejsc"
+                      end
+
+                      msg_sms = "Zmiana ceny lotu (#{offer.departure} - #{offer.arrival} z #{offer.from_airport}) z #{old_price.price} na #{price} liniami #{source_price}. Zostalo #{seats} #{wolnych}!"
+
+                      r = Save.where(offer_id: offer_id, active: 1)
+                      r.each do |u|
+                          user_id=u.user_id
+                          Communication.sentSMS(user_id,offer_id,msg_sms)
+                      end
+
+            end
+          end
+
+          self.where(offer_id: offer_id, active: 1).update_all(
+              active: 0
+          )
+
+          if exists_new
+            new_price=self.where(offer_id: offer_id, active: -1).order(price: :asc).first
+            self.where(id: new_price.id).update_all(
+                active: 1
+            )
+          end
 
       Offer.where("departure < ?", Time.now).update_all(
         active: 0
       )
-    end
   end
 end

@@ -81,6 +81,7 @@
                 <th>Days</th>
                 <th>Seats</th>
           			<th>Price</th>
+                <th>Airline</th>
           			<th>Price change</th>
                 <th>Temp</th>
                 <th>Offer</th>
@@ -91,7 +92,7 @@
             <%
             if params[:from_airport]
               q = "%#{params[:from_airport]}%"
-              results = Offer.order(departure: :asc).where("from_airport LIKE ?", q)
+              results = Offer.order(departure: :asc).where("from_airport LIKE ? AND active = ?", q, 1)
             else
               results = Offer.order(departure: :asc).where(active: 1)
             end
@@ -102,8 +103,8 @@
                 if price > 0
 
                   days = (u.arrival - u.departure).to_i
-                  item = Price.order(created_at: :desc).where(offer_id: u.offer_id).first
-                  line = Price.order(created_at: :asc).where(offer_id: u.offer_id).pluck(:price)
+                  item = Price.order(created_at: :desc).where(offer_id: u.offer_id, active: 1).first
+                  line = Price.order(created_at: :asc).where("offer_id = ? AND active >= ?", u.offer_id, 0).pluck(:price)
                   if session[:user_id]
                     love=Save.where(user_id: session[:user_id], offer_id: u.offer_id, active:1).count
                     if love>0
@@ -126,6 +127,17 @@
                   else
                     price=0
                   end
+
+                  if item.source=="ENT"
+                    url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{u.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
+                    logo=""
+                    source=item.source
+                  else
+                    url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{u.from_airport}&#{u.to_airport}&#{u.departure}&#{u.arrival}&0&PLN&&1=2,2=0,3=0"
+                    logo=""
+                    source="TUI"
+                  end
+
                   %>
                     <tr>
                       <td><input type='checkbox' data-offerid='<%= u.offer_id %>' class='offerchecker' <%= checked %> /></td>
@@ -135,9 +147,10 @@
                       <td><%= days %></td>
                       <td><%= seats %></td>
                       <td class="price"><%= price %></td>
+                      <td><%= source %></td>
                       <td><span class="inlinesparkline"><%= line.to_sentence(:last_word_connector => ",") %></span></td>
                       <td><%= Offer.getTemp(u.departure) %></td>
-                      <td><a href="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=<%= u.offer_id %>&trv=ch&ad_count=1&ch_count=0&in_count=0" target="_blank"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></td>
+                      <td><a href="<%= url %>" target="_blank"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></td>
                     </tr>
                 <% end %>
             <% end %>

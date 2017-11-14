@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   require 'open-uri'
   require 'nokogiri'
   require 'watir'
+  require 'headless'
 
 
   class Entry
@@ -97,6 +98,7 @@ class ApplicationController < ActionController::Base
       )
     }
   end
+
 
   def price_update
       if params[:id]

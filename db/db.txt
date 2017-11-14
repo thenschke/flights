@@ -5,3 +5,7 @@ rails generate model Scraper started_at:datetime finished_at:datetime initiated_
 rails generate model User phone_number:string nickname:string last_seen:datetime active:integer
 rails generate model Save user_id:integer offer_id:integer active:integer
 rails generate model Communication phone_number:string user_id:integer offer_id:integer medium:string type:string
+
+rails generate migration add_source_to_price source:string
+
+rails generate model Source short_name:string long_name:string url:string logo:string active:integer
