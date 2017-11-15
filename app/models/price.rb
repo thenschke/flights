@@ -68,7 +68,7 @@ class Price < ApplicationRecord
               url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=2,2=0,3=0"
               headless = Headless.new
               headless.start
-                b = Watir::Browser.start url
+                b = Watir::Browser.start("#{url}", browser=:chrome)
                 doc = Nokogiri::HTML.parse(b.html)
                 price = doc.css('.price.total-value').text
                 price = price[0...-3].gsub!(',','').to_i
