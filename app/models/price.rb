@@ -48,7 +48,9 @@ class Price < ApplicationRecord
 
                 msg=msg+"new price #{price}; #{seats}; #{source_price};"
 
-                self.savePrice(offer_id,price,seats,scraper,source_price)
+                if price > 0
+                  self.savePrice(offer_id,price,seats,scraper,source_price)
+                end
 
             rescue OpenURI::HTTPRedirect => redirect
 
@@ -72,10 +74,13 @@ class Price < ApplicationRecord
                 price = price.delete(',').to_i
                 seats=10
                 source_price="ENT"
-
+              browser.close
+              
               msg=msg+"new price #{price}; #{seats}; #{source_price};"
 
-              self.savePrice(offer_id,price,seats,scraper,source_price)
+              if price > 0
+                self.savePrice(offer_id,price,seats,scraper,source_price)
+              end
 
             rescue OpenURI::HTTPRedirect => redirect
 

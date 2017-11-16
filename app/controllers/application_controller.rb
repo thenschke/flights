@@ -67,6 +67,7 @@ class ApplicationController < ActionController::Base
 
             Offer.saveResults(@entriesArray)
           end
+          browser.close
         end
       end
     redirect_to '/worker_result'
