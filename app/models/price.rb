@@ -65,11 +65,11 @@ class Price < ApplicationRecord
           elsif source.short_name=="ENT"
 
             begin
-              url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=2,2=0,3=0&"
+              url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=1,2=0,3=0&"
               browser = Watir::Browser.new :chrome, headless: true
               browser.goto url
                 price=browser.span(:class, ['price', 'total-value']).wait_until_present.text
-                price = price.to_i
+                price = price.delete(',').to_i
                 seats=10
                 source_price="ENT"
 
