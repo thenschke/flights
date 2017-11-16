@@ -2,11 +2,11 @@ version: 0.0
 os: "linux"
 files:
   - source: "/"
-    destination: "/home/ec2-user/flights_release/"
+    destination: "/home/ubuntu/flights_release/"
 permissions:
-  - object: /home/ec2-user/flights/
+  - object: /home/ubuntu/flights/
     pattern: "**"
-    owner: ec2-user
+    owner: ubuntu
     # group: nginx
     mode: 755
     type:

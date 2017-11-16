@@ -65,17 +65,13 @@ class Price < ApplicationRecord
           elsif source.short_name=="ENT"
 
             begin
-              url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=2,2=0,3=0"
-              headless = Headless.new
-              headless.start
-                b = Watir::Browser.start("#{url}", browser=:chrome)
-                doc = Nokogiri::HTML.parse(b.html)
-                price = doc.css('.price.total-value').text
-                price = price[0...-3].gsub!(',','').to_i
+              url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=2,2=0,3=0&"
+              browser = Watir::Browser.new :chrome, headless: true
+              browser.goto url
+                price=browser.span(:class, ['price', 'total-value']).wait_until_present.text
+                price = price.to_i
                 seats=10
                 source_price="ENT"
-              b.close
-              headless.destroy
 
               msg=msg+"new price #{price}; #{seats}; #{source_price};"
 
