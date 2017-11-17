@@ -129,12 +129,12 @@
                   end
 
                   if item.source=="ENT"
-                    url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{u.from_airport}&#{u.to_airport}&#{u.departure}&#{u.arrival}&0&PLN&&1=2,2=0,3=0&"
-                    logo=""
+                    url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{u.from_airport}&#{u.to_airport}&#{u.departure}&#{u.arrival}&0&PLN&&1=1,2=0,3=0&"
+                    logo="ent.png"
                     source=item.source
                   else
                     url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{u.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
-                    logo=""
+                    logo="tui.png"
                     source="TUI"
                   end
 
@@ -147,7 +147,7 @@
                       <td><%= days %></td>
                       <td><%= seats %></td>
                       <td class="price"><%= price %></td>
-                      <td><%= source %></td>
+                      <td><img src="/img/logo/<%= logo %>" style="height: 12px;"></td>
                       <td><span class="inlinesparkline"><%= line.to_sentence(:last_word_connector => ",") %></span></td>
                       <td><%= Offer.getTemp(u.departure) %></td>
                       <td><a href="<%= url %>" target="_blank"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a></td>
