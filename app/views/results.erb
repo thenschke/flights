@@ -129,11 +129,11 @@
                   end
 
                   if item.source=="ENT"
-                    url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{u.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
+                    url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{u.from_airport}&#{u.to_airport}&#{u.departure}&#{u.arrival}&0&PLN&&1=2,2=0,3=0&"
                     logo=""
                     source=item.source
                   else
-                    url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{u.from_airport}&#{u.to_airport}&#{u.departure}&#{u.arrival}&0&PLN&&1=2,2=0,3=0"
+                    url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{u.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
                     logo=""
                     source="TUI"
                   end
