@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171114152133) do
+ActiveRecord::Schema.define(version: 20171119195950) do
 
   create_table "communications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "phone_number"
@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20171114152133) do
 
   create_table "offers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "scraper_id"
-    t.integer "offer_id"
+    t.string "offer_id"
     t.string "from_airport"
     t.string "to_airport"
     t.date "departure"
@@ -33,11 +33,25 @@ ActiveRecord::Schema.define(version: 20171114152133) do
     t.integer "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "source"
+  end
+
+  create_table "price_legs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "scraper_id"
+    t.integer "price"
+    t.string "source"
+    t.date "flight_date"
+    t.string "from_airport"
+    t.string "to_airport"
+    t.string "string"
+    t.integer "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "prices", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "scraper_id"
-    t.integer "offer_id"
+    t.string "offer_id"
     t.integer "price"
     t.integer "available_seats"
     t.integer "active"

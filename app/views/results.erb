@@ -132,6 +132,10 @@
                     url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{u.from_airport}&#{u.to_airport}&#{u.departure}&#{u.arrival}&0&PLN&&1=1,2=0,3=0&"
                     logo="ent.png"
                     source=item.source
+                  elsif item.source=="WIZ"
+                    url="https://wizzair.com/en-gb/main-page/#/booking/select-flight/#{u.from_airport}/#{u.to_airport}/#{u.departure}/#{u.arrival}/1/0/0"
+                    logo="wiz.png"
+                    source="WIZ"
                   else
                     url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{u.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
                     logo="tui.png"

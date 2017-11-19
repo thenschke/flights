@@ -49,6 +49,86 @@ class Offer < ApplicationRecord
 
   end
 
+
+  def self.wizzairOffers
+
+    t = Time.now()
+    t = t.strftime("%Y-%m-%d")
+
+    start=t
+
+    source="WIZ"
+    start_airport="KTW"
+
+    # get next flight from KTW available
+    to=PriceLeg.where("active=? AND source=? AND from_airport=? AND flight_date > ?", 1, source, start_airport, t).order(flight_date: :asc)
+    to.each do |to|
+
+    # find all returns flight which is more than 3 days later but less or equal 14 days
+
+      from_airport="DWC"
+
+      t3=to.flight_date.to_date+5.days
+      t14=to.flight_date.to_date+14.days
+
+      back=PriceLeg.where("active=? AND source=? AND from_airport=? AND flight_date > ? AND flight_date <= ?", 1, source, from_airport, t3, t14).order(flight_date: :asc)
+      back.each do |back|
+
+        offer_id="#{to.from_airport}#{to.flight_date}_#{back.from_airport}#{back.flight_date}"
+        seats=10
+        price=to.price+back.price
+        scraper=0
+
+        puts offer_id
+
+      	offer_exists=Offer.where(active: 1, source: 2, offer_id: offer_id).count
+
+        if offer_exists==0
+
+            #add new offer
+            self.create(
+              offer_id: offer_id,
+              departure: to.flight_date,
+              arrival: back.flight_date,
+              from_airport: to.from_airport,
+              to_airport: back.from_airport,
+              scraper_id: 0,
+              source: 2,
+              active: 1
+            )
+        else
+
+            #notifications for loved offers
+            price_exist=Price.where(offer_id: offer_id, source: "WIZ", active: 1).count
+            if price_exist >0
+              old=Price.where(offer_id: offer_id, source: "WIZ", active: 1).first
+              source_price=source
+              old_price=old.price
+
+              if price!=old_price
+                Communication.verUpdate(price,old_price,offer_id,seats,source_price)
+              end
+            end
+        end
+
+
+        Price.where(offer_id: offer_id, active: 1).update_all(
+          active: 0
+        )
+
+        Price.create(
+          offer_id: offer_id,
+          price: price,
+          available_seats: seats,
+          scraper_id: scraper,
+          active: 1,
+          source: source
+        )
+
+      end
+    end
+  end
+
   def self.getTemp(date)
 
     t=[0,23,24,27,32,37,38,40,41,38,35,31,26]

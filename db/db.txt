@@ -9,3 +9,12 @@ rails generate model Communication phone_number:string user_id:integer offer_id:
 rails generate migration add_source_to_price source:string
 
 rails generate model Source short_name:string long_name:string url:string logo:string active:integer
+
+
+rails generate model Price_leg scraper_id:integer price:integer source:string flight_date:date from_airport:string to_airport:string active:integer
+
+rails generate migration add_source_to_offer source:string
+
+rails g migration change_offer_id_to_be_string_in_offers
+
+rails g migration change_offer_id_to_be_string_in_prices

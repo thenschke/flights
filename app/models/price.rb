@@ -137,28 +137,9 @@ class Price < ApplicationRecord
           seats = new_price.available_seats
           source_price = new_price.source
 
-          offer = Offer.where(offer_id: offer_id, active: 1).last
+          Communication.verUpdate(price,old_price,offer_id,seats,source_price)
 
-            if price.to_i!=old_price.price.to_i
-                      # SMS
-                      if seats.to_i <2
-                        wolnych="wolne miejsce"
-                      elsif seats.to_i <5
-                        wolnych="wolne miejsca"
-                      else
-                        wolnych="wolnych miejsc"
-                      end
-
-                      msg_sms = "Zmiana ceny lotu (#{offer.departure} - #{offer.arrival} z #{offer.from_airport}) z #{old_price.price} na #{price} liniami #{source_price}. Zostalo #{seats} #{wolnych}!"
-
-                      r = Save.where(offer_id: offer_id, active: 1)
-                      r.each do |u|
-                          user_id=u.user_id
-                          Communication.sentSMS(user_id,offer_id,msg_sms)
-                      end
-
-            end
-          end
+        end
 
           self.where(offer_id: offer_id, active: 1).update_all(
               active: 0
@@ -175,4 +156,7 @@ class Price < ApplicationRecord
         active: 0
       )
   end
+
+
+
 end
