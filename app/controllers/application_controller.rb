@@ -111,5 +111,15 @@ class ApplicationController < ActionController::Base
       redirect_to "/worker_result?id=#{@id}"
   end
 
+  def leg_wizzair
+    PriceLeg.wizzairPriceLeg
+    puts "done"
+  end
+
+  def offer_wizzair
+    Offer.wizzairOffers
+    puts "done"
+  end
+
 
 end

@@ -28,7 +28,7 @@ class PriceLeg < ApplicationRecord
 
         time=cal.element(:tag_name => "time", :class => ['booking-flow__flight-select__chart__day__number', 'title', 'title--2']).attribute_value("datetime")[0..9]
         if cal.span(:class => "booking-flow__flight-select__chart__day__price").exists?
-          price=cal.span(:class => "booking-flow__flight-select__chart__day__price").text[2..9]
+          price=cal.span(:class => "booking-flow__flight-select__chart__day__price").text[2..9].to_i
 
           puts "#{from}-#{to} #{time}: #{price}"
 
@@ -67,7 +67,7 @@ class PriceLeg < ApplicationRecord
 
           time=cal.element(:tag_name => "time", :class => ['booking-flow__flight-select__chart__day__number', 'title', 'title--2']).attribute_value("datetime")[0..9]
           if cal.span(:class => "booking-flow__flight-select__chart__day__price").exists?
-            price=cal.span(:class => "booking-flow__flight-select__chart__day__price").text[3..10]
+            price=cal.span(:class => "booking-flow__flight-select__chart__day__price").text[3..10].to_i
 
             puts "#{from_back}-#{to_back} #{time}: #{price}"
 

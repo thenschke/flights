@@ -9,4 +9,8 @@ Rails.application.routes.draw do
   get 'worker_result' => 'application#worker_result'
   get 'result_json' => 'application#result_json'
 
+  get 'leg_wizzair' => 'application#leg_wizzair'
+  get 'offer_wizzair' => 'application#offer_wizzair'
+  
+
 end

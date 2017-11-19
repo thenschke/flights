@@ -98,9 +98,9 @@
             end
               results.each do |u|
 
-                price = Price.where(offer_id: u.offer_id, active: 1).count
+                price_exist = Price.where(offer_id: u.offer_id, active: 1).count
 
-                if price > 0
+                if price_exist > 0
 
                   days = (u.arrival - u.departure).to_i
                   item = Price.order(created_at: :desc).where(offer_id: u.offer_id, active: 1).first
