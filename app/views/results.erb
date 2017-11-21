@@ -14,7 +14,16 @@
           end
           %>
           <h5 style="margin:0; color: #FF337D">Hej <%= user %>!</h5>
-          <h2>Flights <i class="fa fa-angle-double-right" aria-hidden="true"></i> Dubai </h2>
+
+          <form id="nl-form" class="nl-form">
+            Flights
+    					<select id="to_from">
+    						<option value="1" selected>to</option>
+    						<option value="2">from</option>
+    					</select>
+            Dubai
+          </form>
+
 
           <%
 
@@ -29,7 +38,7 @@
           end
           %>
 
-          <div class="row" style="margin: 0px 0px 5px 3px;">
+          <div class="row" style="margin: 20px 0px 5px 3px;">
             From:
             <div class="radio radio-info pull-left" style="margin: 0 10px;">
                 <input type="radio" name="from_airport" value="all" onclick="javascript:window.location.href='/?list=on';" <%= all %>>
@@ -150,7 +159,7 @@
                       <td><%= u.arrival.strftime("%d/%m") %></td>
                       <td><%= days %></td>
                       <td><%= seats %></td>
-                      <td class="price"><%= price %></td>
+                      <td class="price"><span title="<%= item.created_at %>"><%= price %></span></td>
                       <td><img src="/img/logo/<%= logo %>" style="height: 12px;"></td>
                       <td><span class="inlinesparkline"><%= line.to_sentence(:last_word_connector => ",") %></span></td>
                       <td><%= Offer.getTemp(u.departure) %></td>

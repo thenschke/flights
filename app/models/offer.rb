@@ -105,7 +105,9 @@ class Offer < ApplicationRecord
               source_price=source
               old_price=old.price
 
-              if price!=old_price
+              diff = (price-old_price).abs
+              puts diff
+              if diff > 20
                 Communication.verUpdate(price,old_price,offer_id,seats,source_price)
               end
             end
