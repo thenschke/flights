@@ -12,11 +12,15 @@ class Offer < ApplicationRecord
       initiated_by: initiated_by
     )
 
+    updated=0
+    added=0
+
     entriesArray.each do |entry|
 
       exists = self.where(offer_id: entry.offer_id).count
 
         if exists < 1
+          puts "new offer: "+entry.offer_id
           self.create(
             offer_id: entry.offer_id,
             departure: entry.date_from,
@@ -24,9 +28,12 @@ class Offer < ApplicationRecord
             from_airport: entry.from_airport,
             to_airport: entry.to_airport,
             scraper_id: scraper.id,
-            active: 1
+            active: 1,
+            source: 1
           )
+          updated=updated+1
         else
+          puts "updated offer: "+entry.offer_id
           id = self.where(offer_id: entry.offer_id).last.id
           self.where(id: id).update_all(
             departure: entry.date_from,
@@ -34,17 +41,24 @@ class Offer < ApplicationRecord
             from_airport: entry.from_airport,
             to_airport: entry.to_airport,
             scraper_id: scraper.id,
-            active: 1
+            active: 1,
+            source: 1
           )
+          added=added+1
         end
     end
+
+    output = "Added: "+added+" ; Updated: "+updated
+    puts output
 
     self.where("departure < ?", Time.now).update_all(
       active: 0
     )
 
+
     Scraper.where(:id => scraper.id).update_all(
-      finished_at: Time.now
+      finished_at: Time.now,
+      output: output
     )
 
   end

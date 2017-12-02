@@ -6,10 +6,10 @@ aws:
     attribute_names:
       - ApproximateReceiveCount
       - SentTimestamp
-  logfile: log/shoryuken.log
-  pidfile: log/shoryuken.pid
-concurrency: 1
-delay: 100
+  logfile: /home/ec2-user/flights/log/shoryuken.log
+  pidfile: /home/ec2-user/flights/log/shoryuken.pid
+concurrency: 4
+delay: 10
 timeout: 100
 wait_time_second: 6
 queues:

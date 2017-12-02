@@ -101,13 +101,13 @@
             <%
             if params[:from_airport]
               q = "%#{params[:from_airport]}%"
-              results = Offer.order(departure: :asc).where("from_airport LIKE ? AND active = ?", q, 1)
+              results = Offer.order(departure: :asc).where("from_airport LIKE ? AND active = ? AND source = ?", q, 1, 1)
             else
-              results = Offer.order(departure: :asc).where(active: 1)
+              results = Offer.order(departure: :asc).where(active: 1, source: 1)
             end
               results.each do |u|
 
-                price_exist = Price.where(offer_id: u.offer_id, active: 1).count
+                price_exist = Price.where(offer_id: u.offer_id, active: 1, source: 1).count
 
                 if price_exist > 0
 

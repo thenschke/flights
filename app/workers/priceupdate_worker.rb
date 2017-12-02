@@ -6,7 +6,6 @@ class Priceupdate
 
   def perform(sqs_msg, body)
     id=body
-    #puts id
     Price.saveResults(id)
   end
  end
