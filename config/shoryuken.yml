@@ -8,9 +8,8 @@ aws:
       - SentTimestamp
   logfile: /home/ec2-user/flights/log/shoryuken.log
   pidfile: /home/ec2-user/flights/log/shoryuken.pid
-concurrency: 3
+concurrency: 1
 delay: 0
 timeout: 100
-wait_time_second: 6
 queues:
   - production_priceupdate
