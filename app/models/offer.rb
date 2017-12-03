@@ -48,10 +48,10 @@ class Offer < ApplicationRecord
         end
     end
 
-    output = "Added: "+added+" ; Updated: "+updated
+    output = "Added: #{added} Updated: #{updated}"
     puts output
 
-    self.where("departure < ?", Time.now).update_all(
+    self.where("departure < ? AND active = ?", Time.now, 1).update_all(
       active: 0
     )
 

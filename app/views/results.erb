@@ -107,7 +107,7 @@
             end
               results.each do |u|
 
-                price_exist = Price.where(offer_id: u.offer_id, active: 1, source: 1).count
+                price_exist = Price.where(offer_id: u.offer_id, active: 1).count
 
                 if price_exist > 0
 

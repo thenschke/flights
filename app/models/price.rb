@@ -2,12 +2,21 @@ class Price < ApplicationRecord
 
   belongs_to :offer, class_name: "Offer", foreign_key: "offer_id", :primary_key => 'offer_id'
 
+
+  require 'open-uri'
+  require 'nokogiri'
+  require 'watir'
+  require 'headless'
+
+
   def self.saveResults(id)
+
+    @global_msg
 
     if id.to_i>0
         results = Offer.where(active: 1, offer_id: id)
     else
-        results = Offer.where(active: 1)
+        results = Offer.where(active: 1, source: 1)
     end
 
     results.each do |results|
@@ -22,6 +31,8 @@ class Price < ApplicationRecord
       #if recent == 0
 
         msg=""
+        ok1=1
+        ok2=1
 
         source = Source.where(active: 1)
         source.each do |source|
@@ -34,6 +45,8 @@ class Price < ApplicationRecord
 
           if source.short_name=="TUI"
 
+            source_price="TUI"
+
             begin
               url="https://oferty.tui.pl/new-rezerwacja-oferty?id_o=#{results.offer_id}&trv=ch&ad_count=1&ch_count=0&in_count=0"
               uri=URI.parse(url)
@@ -44,9 +57,8 @@ class Price < ApplicationRecord
                 seats = doc.css('.cnv-free-seats').text
                 seats = seats.delete "\s\n"
                 seats = seats[-1]
-                source_price="TUI"
 
-                msg=msg+"new price #{price}; #{seats}; #{source_price};"
+                msg="#{msg} #{source_price}: new price #{price}; #{seats} |"
 
                 if price > 0
                   self.savePrice(offer_id,price,seats,scraper,source_price)
@@ -54,50 +66,45 @@ class Price < ApplicationRecord
 
             rescue OpenURI::HTTPRedirect => redirect
 
-                msg=msg+"error: with redirecting"
+                msg="#{msg} #{source_price}: error with redirecting |"
 
-                self.where(offer_id: results.offer_id).update_all(
+                self.where(offer_id: results.offer_id, source: source_price).update_all(
                   active: 0
                 )
-                Offer.where(offer_id: results.offer_id).update_all(
-                  active: 0
-                )
+                ok1=0
             end
 
           elsif source.short_name=="ENT"
 
+            Watir.default_timeout = 90
+            Watir.relaxed_locate = false
+            url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=1,2=0,3=0&"
+            browser = Watir::Browser.new :chrome, headless: true
+            browser.goto url
+
+            source_price="ENT"
+
             begin
+              price=browser.span(:class, ['price', 'total-value']).wait_until_present(6)
 
-              Watir.default_timeout = 90
-              Watir.relaxed_locate = false
-              url="http://www.enterair.pl/en/buy-ticket#BookingSecondPagePlace:false&#{results.from_airport}&#{results.to_airport}&#{results.departure}&#{results.arrival}&0&PLN&&1=1,2=0,3=0&"
-              browser = Watir::Browser.new :chrome, headless: true
-              browser.goto url
-
-                price=browser.span(:class, ['price', 'total-value']).wait_until_present.text
-
+                price=browser.span(:class, ['price', 'total-value']).text
                 price = price.delete(',').to_i
                 seats=10
-                source_price="ENT"
+                browser = browser.close
 
-              browser = browser.close
+                msg="#{msg} #{source_price}: new price #{price}; #{seats} |"
 
-              msg=msg+"new price #{price}; #{seats}; #{source_price};"
+                if price > 0
+                  self.savePrice(offer_id,price,seats,scraper,source_price)
+                end
 
-              if price > 0
-                self.savePrice(offer_id,price,seats,scraper,source_price)
-              end
+            rescue
+              msg="#{msg} #{source_price}: error with scraping |"
 
-            rescue OpenURI::HTTPRedirect => redirect
-
-              msg=msg+"error: with redirecting"
-
-              self.where(offer_id: results.offer_id).update_all(
+              self.where(offer_id: results.offer_id, source: source_price).update_all(
                 active: 0
               )
-              Offer.where(offer_id: results.offer_id).update_all(
-                active: 0
-              )
+              ok2=0
             end
           end
 
@@ -105,9 +112,23 @@ class Price < ApplicationRecord
             finished_at: Time.now,
             output: msg
           )
+
         end
-        self.calculationPrice(offer_id)
+
+        # check if the offer should be deactivated
+        ok=ok1+ok2
+        if ok==0
+          Offer.where(offer_id: results.offer_id).update_all(
+            active: 0
+          )
+        else
+          self.calculationPrice(offer_id)
+        end
+        @global_msg="#{@global_msg} #{msg}"
+        puts msg
+
       end
+      return @global_msg
     end
 
 

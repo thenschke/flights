@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
       [0,4,9].each do |i|
         # Scrapping the content
         ["ln7","ln9-13"].each do |k|
-          browser = Watir::Browser.new :chrome
+          browser = Watir::Browser.new :chrome, headless: true
           browser.goto "http://oferty.tui.pl/bilety-lotnicze/wyniki-wyszukiwania#/flight_from_label=Katowice%2C+Pozna%C5%84%2C+Warszawa&airport_from%5B%5D=KTW&airport_from%5B%5D=POZ&airport_from%5B%5D=WAW&flight_to_label=Ras+al+Khaimah&airport_to%5B%5D=334&dt_from=&dt_to=&dt_length=#{k}&adults=1&children=0&page=#{i}"
           doc = Nokogiri::HTML.parse(browser.html)
 

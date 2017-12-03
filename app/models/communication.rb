@@ -41,14 +41,18 @@ class Communication < ApplicationRecord
           wolnych="wolnych miejsc"
       end
 
-      offer = Offer.where(offer_id: offer_id, active: 1).last
+      exists = Offer.where(offer_id: offer_id, active: 1).count
 
-      msg_sms = "Zmiana ceny lotu (#{offer.departure} - #{offer.arrival} z #{offer.from_airport}) z #{old_price} na #{price} liniami #{source_price}. Zostalo #{seats} #{wolnych}!"
+      if exists > 0
+        offer = Offer.where(offer_id: offer_id, active: 1).last
 
-      r = Save.where(offer_id: offer_id, active: 1)
-      r.each do |u|
-          user_id=u.user_id
-          self.sentSMS(user_id,offer_id,msg_sms)
+        msg_sms = "Zmiana ceny lotu (#{offer.departure} - #{offer.arrival} z #{offer.from_airport}) z #{old_price} na #{price} liniami #{source_price}. Zostalo #{seats} #{wolnych}!"
+
+        r = Save.where(offer_id: offer_id, active: 1)
+        r.each do |u|
+            user_id=u.user_id
+            self.sentSMS(user_id,offer_id,msg_sms)
+        end
       end
     end
   end
