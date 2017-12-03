@@ -31,7 +31,7 @@ class Offer < ApplicationRecord
             active: 1,
             source: 1
           )
-          updated=updated+1
+          added=added+1
         else
           puts "updated offer: "+entry.offer_id
           id = self.where(offer_id: entry.offer_id).last.id
@@ -44,7 +44,7 @@ class Offer < ApplicationRecord
             active: 1,
             source: 1
           )
-          added=added+1
+          updated=updated+1
         end
     end
 
